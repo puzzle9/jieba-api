@@ -29,7 +29,7 @@ curl --location --request GET 'http://127.0.0.1:5000/'
 }
 ```
 
-## 使用
+## 直接分词
 
 ```sh
 curl --location --request POST 'http://127.0.0.1:5000/' \
@@ -53,3 +53,37 @@ curl --location --request POST 'http://127.0.0.1:5000/' \
 - `mode` 分词模式 `cut` `cut_for_search`
 - `body` 分词内容
 - `is_cut_all` 是否采用全模式
+
+## 词性标注
+
+```sh
+curl --location --request POST 'http://127.0.0.1:5000/posseg' \
+--form 'body="我爱吃陕西西安肉夹馍,爽"'
+```
+
+```json
+{
+    "datas": {
+        "n": [
+            "肉夹馍"
+        ],
+        "nr": [
+            "爽"
+        ],
+        "ns": [
+            "陕西",
+            "西安"
+        ],
+        "r": [
+            "我"
+        ],
+        "v": [
+            "爱",
+            "吃"
+        ],
+        "x": [
+            ","
+        ]
+    }
+}
+```

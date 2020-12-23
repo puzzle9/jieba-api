@@ -1,8 +1,10 @@
+from time import sleep
+
 from flask import Flask, request
 
 from datetime import datetime
 
-import jieba
+import jieba, jieba.posseg
 
 app = Flask(__name__, static_folder='jieba')
 
@@ -30,6 +32,27 @@ def start():
     return {
         'mode': mode,
         'datas': (','.join(data)).split(','),
+    }
+
+
+@app.route('/posseg', methods=['POST'])
+def analyse():
+    form = request.form.to_dict()
+
+    words = jieba.posseg.cut(form.get('body', 'hello'))
+
+    datas = {}
+
+    for info in words:
+        flag = info.flag
+
+        if flag not in datas:
+            datas[flag] = []
+
+        datas[flag].append(info.word)
+
+    return {
+        'datas': datas,
     }
 
 
