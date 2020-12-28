@@ -39,20 +39,24 @@ def start():
 def analyse():
     form = request.form.to_dict()
 
-    words = jieba.posseg.cut(form.get('body', 'hello'))
+    possegs = jieba.posseg.cut(form.get('body', 'hello'))
 
     datas = {}
+    words = []
 
-    for info in words:
+    for info in possegs:
         flag = info.flag
+        word = info.word
 
         if flag not in datas:
             datas[flag] = []
 
-        datas[flag].append(info.word)
+        datas[flag].append(word)
+        words.append(word)
 
     return {
         'datas': datas,
+        'words': words,
     }
 
 
