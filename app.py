@@ -31,12 +31,12 @@ def start():
 
     return {
         'mode': mode,
-        'datas': (','.join(data)).split(','),
+        'datas': list(data),
     }
 
 
 @app.route('/posseg', methods=['POST'])
-def analyse():
+def posseg():
     form = request.form.to_dict()
 
     possegs = jieba.posseg.cut(form.get('body', 'hello'))
@@ -57,6 +57,33 @@ def analyse():
     return {
         'datas': datas,
         'words': words,
+    }
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    form = request.form.to_dict()
+
+    body = form.get('body', 'hello')
+
+    possegs = jieba.posseg.cut(body)
+
+    datas = {}
+
+    for info in possegs:
+        flag = info.flag
+        word = info.word
+
+        if flag not in datas:
+            datas[flag] = []
+
+        datas[flag].append(word)
+
+    search = list(jieba.cut_for_search(body))
+
+    return {
+        'posseg': datas,
+        'search': search,
     }
 
 
